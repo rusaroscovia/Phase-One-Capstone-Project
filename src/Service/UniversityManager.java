@@ -26,7 +26,7 @@ public class UniversityManager {
         }
 
         if (student.getEnrolledCourses().containsKey(course)) {
-            throw new StudentEnrolledException("Student already enrolled.");
+            throw new StudentEnrolledException("Student a enrolled.");
         }
 
         course.addStudent(student);
