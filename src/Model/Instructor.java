@@ -1,4 +1,20 @@
 package Model;
 
-public class Instructor {
+public class Instructor extends Person {
+
+    private String department;
+
+    public Instructor(String name, String email, String department) {
+        super(name, email);
+        this.department = department;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    @Override
+    public String getRole() {
+        return "Instructor";
+    }
 }
