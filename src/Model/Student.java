@@ -9,7 +9,7 @@ public abstract class Student extends Person {
     private double gpa;
     private String department;
 
-    // Many-to-many relationship
+
     private Map<Course, Double> enrolledCourses = new HashMap<>();
 
     public Student(String name, String email, String studentId, String department) {
