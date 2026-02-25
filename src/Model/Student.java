@@ -6,9 +6,8 @@ import java.util.Map;
 public abstract class Student extends Person {
 
     private String studentId;
-    private double gpa;
     private String department;
-
+    private double gpa;
 
     private Map<Course, Double> enrolledCourses = new HashMap<>();
 
@@ -18,39 +17,31 @@ public abstract class Student extends Person {
         this.department = department;
     }
 
-    public String getStudentId() {
-        return studentId;
-    }
+    public String getStudentId() { return studentId; }
 
-    public double getGpa() {
-        return gpa;
-    }
+    public String getDepartment() { return department; }
 
-    public String getDepartment() {
-        return department;
-    }
+    public double getGpa() { return gpa; }
 
     public Map<Course, Double> getEnrolledCourses() {
         return enrolledCourses;
     }
 
     public void addCourse(Course course) {
-        enrolledCourses.put(course, 0.0);
+        enrolledCourses.put(course, null);
     }
 
     public void updateGrade(Course course, double grade) {
         enrolledCourses.put(course, grade);
-        calculateGPA();
+        calculateGpa();
     }
 
-    private void calculateGPA() {
-        double total = enrolledCourses.values()
-                .stream()
+    private void calculateGpa() {
+        gpa = enrolledCourses.values().stream()
+                .filter(g -> g != null)
                 .mapToDouble(Double::doubleValue)
                 .average()
                 .orElse(0.0);
-
-        this.gpa = total;
     }
 
     public abstract double calculateTuition();

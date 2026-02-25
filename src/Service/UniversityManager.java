@@ -1,7 +1,9 @@
 package Service;
 
-import Model.*;
-import exception.*;
+import Model.Course;
+import Model.Student;
+import exception.CourseException;
+import exception.StudentEnrolledException;
 
 import java.util.*;
 
@@ -26,21 +28,37 @@ public class UniversityManager {
         }
 
         if (student.getEnrolledCourses().containsKey(course)) {
-            throw new StudentEnrolledException("Student a enrolled.");
+            throw new StudentEnrolledException("Student already enrolled.");
         }
 
         course.addStudent(student);
         student.addCourse(course);
     }
 
-    public List<Student> getDeanList() {
+    public Student findStudentById(String id) {
         return students.stream()
-                .filter(s -> s.getGpa() > 3.5)
-                .toList();
+                .filter(s -> s.getStudentId().equals(id))
+                .findFirst()
+                .orElse(null);
     }
 
-    public Optional<Student> getTopStudent() {
-        return students.stream()
-                .max(Comparator.comparingDouble(Student::getGpa));
+    public Course findCourseByCode(String code) {
+        return courses.stream()
+                .filter(c -> c.getCourseCode().equals(code))
+                .findFirst()
+                .orElse(null);
     }
+
+    public void printDeansList() {
+        students.stream()
+                .filter(s -> s.getGpa() > 3.5)
+                .forEach(s ->
+                        System.out.println(s.getStudentId()
+                                + " - " + s.getName()
+                                + " | GPA: " + s.getGpa()));
+    }
+
+    public List<Student> getStudents() { return students; }
+
+    public List<Course> getCourses() { return courses; }
 }

@@ -1,0 +1,3 @@
+25817;rusaro;IT;0.0
+25820;KEZA;cst;0.0
+25821;nziza;finance;0.0

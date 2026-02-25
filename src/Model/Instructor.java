@@ -9,9 +9,7 @@ public class Instructor extends Person {
         this.department = department;
     }
 
-    public String getDepartment() {
-        return department;
-    }
+    public String getDepartment() { return department; }
 
     @Override
     public String getRole() {

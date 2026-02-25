@@ -12,24 +12,23 @@ public class Course {
 
     private List<Student> roster = new ArrayList<>();
 
-    public Course(String courseCode, String title, int credits, int maxCapacity) {
+    public Course(String courseCode, String title,
+                  int credits, int maxCapacity) {
         this.courseCode = courseCode;
         this.title = title;
         this.credits = credits;
         this.maxCapacity = maxCapacity;
     }
 
-    public List<Student> getRoster() {
-        return roster;
-    }
+    public String getCourseCode() { return courseCode; }
 
-    public int getMaxCapacity() {
-        return maxCapacity;
-    }
+    public String getTitle() { return title; }
 
-    public String getCourseCode() {
-        return courseCode;
-    }
+    public int getCredits() { return credits; }
+
+    public int getMaxCapacity() { return maxCapacity; }
+
+    public List<Student> getRoster() { return roster; }
 
     public void addStudent(Student student) {
         roster.add(student);
