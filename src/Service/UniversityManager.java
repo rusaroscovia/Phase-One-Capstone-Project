@@ -50,15 +50,58 @@ public class UniversityManager {
     }
 
     public void printDeansList() {
-        students.stream()
+
+        List<Student> deanList = students.stream()
                 .filter(s -> s.getGpa() > 3.5)
-                .forEach(s ->
-                        System.out.println(s.getStudentId()
-                                + " - " + s.getName()
-                                + " | GPA: " + s.getGpa()));
+                .toList();
+
+        if (deanList.isEmpty()) {
+            System.out.println("No students qualified for Dean's List.");
+            return;
+        }
+
+        System.out.println("\n--- Dean's List ---");
+
+        deanList.forEach(s ->
+                System.out.println(
+                        s.getStudentId() + " | " +
+                                s.getName() + " | GPA: " +
+                                String.format("%.2f", s.getGpa())
+                )
+        );
     }
 
-    public List<Student> getStudents() { return students; }
+    public void printStudentRecord(Student student) {
 
-    public List<Course> getCourses() { return courses; }
+        System.out.println("\n--- Student Record ---");
+        System.out.println("ID: " + student.getStudentId());
+        System.out.println("Name: " + student.getName());
+        System.out.println("Department: " + student.getDepartment());
+        System.out.println("GPA: " + String.format("%.2f", student.getGpa()));
+        System.out.println("Tuition: " + student.calculateTuition());
+
+        if (student.getEnrolledCourses().isEmpty()) {
+            System.out.println("No enrolled courses.");
+            return;
+        }
+
+        System.out.println("Courses:");
+
+        student.getEnrolledCourses().forEach((course, grade) -> {
+
+            System.out.println(
+                    "- " + course.getTitle() +
+                            " | Credits: " + course.getCredits() +
+                            " | Grade: " + (grade == null ? "N/A" : grade)
+            );
+        });
+    }
+
+    public List<Student> getStudents() {
+        return students;
+    }
+
+    public List<Course> getCourses() {
+        return courses;
+    }
 }

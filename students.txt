@@ -1,3 +1,4 @@
-25817;rusaro;IT;0.0
-25820;KEZA;cst;0.0
-25821;nziza;finance;0.0
+25819;kamanzi;COMP
+25817;Rusaro scovia;IT
+25815;mwiza tiffany;Education
+25816;kamanzi tresor;Finance

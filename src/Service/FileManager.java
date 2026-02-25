@@ -2,24 +2,28 @@ package Service;
 
 import Model.Course;
 import Model.Student;
+import Model.UndergraduateStudent;
 
 import java.io.*;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FileManager {
 
+    private static final String STUDENT_FILE = "students.txt";
+    private static final String COURSE_FILE = "courses.txt";
+
+
+
     public void saveStudents(List<Student> students) {
 
-        try (BufferedWriter writer =
-                     new BufferedWriter(new FileWriter("students.txt"))) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(STUDENT_FILE))) {
 
             for (Student s : students) {
-                writer.write(s.getStudentId() + ";" +
-                        s.getName() + ";" +
-                        s.getDepartment() + ";" +
-                        s.getGpa());
-                writer.newLine();
+                writer.println(
+                        s.getStudentId() + ";" +
+                                s.getName() + ";" +
+                                s.getDepartment()
+                );
             }
 
         } catch (IOException e) {
@@ -29,14 +33,15 @@ public class FileManager {
 
     public void saveCourses(List<Course> courses) {
 
-        try (BufferedWriter writer =
-                     new BufferedWriter(new FileWriter("courses.txt"))) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(COURSE_FILE))) {
 
             for (Course c : courses) {
-                writer.write(c.getCourseCode() + ";" +
-                        c.getTitle() + ";" +
-                        c.getCredits());
-                writer.newLine();
+                writer.println(
+                        c.getCourseCode() + ";" +
+                                c.getTitle() + ";" +
+                                c.getCredits() + ";" +
+                                c.getMaxCapacity()
+                );
             }
 
         } catch (IOException e) {
@@ -46,22 +51,88 @@ public class FileManager {
 
     public void saveEnrollments(List<Student> students) {
 
-        try (BufferedWriter writer =
-                     new BufferedWriter(new FileWriter("enrollments.txt"))) {
+    }
 
-            for (Student s : students) {
-                for (Map.Entry<Course, Double> entry :
-                        s.getEnrolledCourses().entrySet()) {
 
-                    writer.write(s.getStudentId() + ";" +
-                            entry.getKey().getCourseCode() + ";" +
-                            entry.getValue());
-                    writer.newLine();
+
+    public List<Student> loadStudents() {
+
+        List<Student> students = new ArrayList<>();
+
+        File file = new File(STUDENT_FILE);
+
+        if (!file.exists()) {
+            return students;
+        }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+
+                String[] data = line.split(";");
+
+                if (data.length >= 3) {
+
+                    Student s = new UndergraduateStudent(
+                            data[1],
+                            "loaded@email.com",
+                            data[0],
+                            data[2]
+                    ) {
+                        @Override
+                        public String getRole() {
+                            return "";
+                        }
+                    };
+
+                    students.add(s);
                 }
             }
 
         } catch (IOException e) {
-            System.out.println("Error saving enrollments.");
+            System.out.println("Error loading students.");
         }
+
+        return students;
+    }
+
+    public List<Course> loadCourses() {
+
+        List<Course> courses = new ArrayList<>();
+
+        File file = new File(COURSE_FILE);
+
+        if (!file.exists()) {
+            return courses;
+        }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+
+                String[] data = line.split(";");
+
+                if (data.length >= 4) {
+
+                    Course c = new Course(
+                            data[0],
+                            data[1],
+                            Integer.parseInt(data[2]),
+                            Integer.parseInt(data[3])
+                    );
+
+                    courses.add(c);
+                }
+            }
+
+        } catch (IOException e) {
+            System.out.println("Error loading courses.");
+        }
+
+        return courses;
     }
 }

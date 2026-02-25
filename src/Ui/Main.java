@@ -14,12 +14,15 @@ public class Main {
         FileManager fileManager = new FileManager();
         Scanner scanner = new Scanner(System.in);
 
+        manager.getStudents().addAll(fileManager.loadStudents());
+        manager.getCourses().addAll(fileManager.loadCourses());
+
         while (true) {
 
             System.out.println("\n1. Register Student");
             System.out.println("2. Create Course");
             System.out.println("3. Enroll Student");
-            System.out.println("4. View Students");
+            System.out.println("4. View Student Record");
             System.out.println("5. Dean's List");
             System.out.println("6. Save & Exit");
 
@@ -40,7 +43,12 @@ public class Main {
                 System.out.print("Department: ");
                 String dept = scanner.nextLine();
 
-                Student s = new UndergraduateStudent(name, email, id, dept);
+                Student s = new UndergraduateStudent(name, email, id, dept) {
+                    @Override
+                    public String getRole() {
+                        return "";
+                    }
+                };
                 manager.registerStudent(s);
             }
 
@@ -59,8 +67,7 @@ public class Main {
                 int max = scanner.nextInt();
                 scanner.nextLine();
 
-                manager.createCourse(
-                        new Course(code, title, credits, max));
+                manager.createCourse(new Course(code, title, credits, max));
             }
 
             else if (choice == 3) {
@@ -71,31 +78,75 @@ public class Main {
                 System.out.print("Course Code: ");
                 String code = scanner.nextLine();
 
-                try {
-                    manager.enrollStudentInCourse(
-                            manager.findStudentById(id),
-                            manager.findCourseByCode(code)
-                    );
-                    System.out.println("Enrolled successfully.");
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
+                Student student = manager.findStudentById(id);
+                Course course = manager.findCourseByCode(code);
+
+                if (student == null || course == null) {
+                    System.out.println("Invalid student or course.");
+                } else {
+                    try {
+                        manager.enrollStudentInCourse(student, course);
+                        System.out.println("Enrolled successfully.");
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
                 }
             }
 
             else if (choice == 4) {
 
-                manager.getStudents()
-                        .forEach(s ->
-                                System.out.println(
-                                        s.getStudentId() + " - "
-                                                + s.getName()));
+                System.out.print("Enter Student ID: ");
+                String id = scanner.nextLine();
+
+                Student student = manager.findStudentById(id);
+
+                if (student == null) {
+                    System.out.println("Student not found.");
+                } else {
+                    manager.printStudentRecord(student);
+                }
             }
 
             else if (choice == 5) {
                 manager.printDeansList();
             }
-
             else if (choice == 6) {
+
+                System.out.print("Student ID: ");
+                String id = scanner.nextLine();
+
+                System.out.print("Course Code: ");
+                String code = scanner.nextLine();
+
+                System.out.print("Grade (A-F): ");
+                String gradeInput = scanner.nextLine().toUpperCase();
+
+                double grade;
+
+                switch (gradeInput) {
+                    case "A": grade = 4.0; break;
+                    case "B": grade = 3.0; break;
+                    case "C": grade = 2.0; break;
+                    case "D": grade = 1.0; break;
+                    case "F": grade = 0.0; break;
+                    default:
+                        System.out.println("Invalid grade.");
+                        continue;
+                }
+
+                Student student = manager.findStudentById(id);
+                Course course = manager.findCourseByCode(code);
+
+                if (student != null && course != null) {
+                    student.assignGrade(course, grade);
+                    System.out.println("Grade assigned.");
+                } else {
+                    System.out.println("Invalid student or course.");
+                }
+            }
+
+
+            else if (choice == 7) {
 
                 fileManager.saveStudents(manager.getStudents());
                 fileManager.saveCourses(manager.getCourses());
@@ -105,5 +156,7 @@ public class Main {
                 break;
             }
         }
+
+        scanner.close();
     }
 }
